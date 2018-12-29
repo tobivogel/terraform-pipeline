@@ -1,0 +1,15 @@
+version: "3"
+services:
+  gocd-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    ports:
+      - "8153:8153"
+      - "8154:8154"
+
+  gocd-agent:
+    image: gocd/gocd-agent-alpine-3.8:v18.12.0
+    environment:
+      AGENT_AUTO_REGISTER_KEY: "cafecafe-4aab-4056-b325-9fbe25b9a734"
+      GO_SERVER_URL: https://gocd-server:8154/go
