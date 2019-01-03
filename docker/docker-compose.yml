@@ -9,7 +9,9 @@ services:
       - "8154:8154"
 
   gocd-agent:
-    image: gocd/gocd-agent-alpine-3.8:v18.12.0
+    build:
+      context: .
+      dockerfile: Dockerfile.agent
     environment:
       AGENT_AUTO_REGISTER_KEY: "cafecafe-4aab-4056-b325-9fbe25b9a734"
       GO_SERVER_URL: https://gocd-server:8154/go

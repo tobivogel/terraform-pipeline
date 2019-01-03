@@ -3,4 +3,9 @@
   <server artifactsdir="artifacts" agentAutoRegisterKey="cafecafe-4aab-4056-b325-9fbe25b9a734" webhookSecret="f09db012-08dc-4f11-8d51-d630e22a790b" commandRepositoryLocation="default" tokenGenerationKey="d78b6b79-1cfd-45f6-8e51-8352ace20ee0" serverId="f0eaf0f2-c1df-43f4-b526-33910ac96015" >
     <backup emailOnSuccess="true" emailOnFailure="true" />
   </server>
+  <config-repos>
+     <config-repo pluginId="yaml.config.plugin" id="zoo-application-repo">
+       <git url="https://github.com/tobivogel/zoo-application.git" />
+     </config-repo>
+   </config-repos>
 </cruise>
