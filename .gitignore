@@ -1,2 +1,2 @@
-*.tfstate
-*.tfstate.*
+docker/gocd-artifacts/*
+!docker/gocd-artifacts/do-not-delete.txt
