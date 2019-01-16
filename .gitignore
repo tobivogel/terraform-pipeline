@@ -1,2 +1,6 @@
 docker/gocd-artifacts/*
 !docker/gocd-artifacts/do-not-delete.txt
+.terraform
+
+*.tfstate
+*.tfstate.*
