@@ -34,7 +34,7 @@ resource "aws_security_group" "http-ssh-default" {
   }
 }
 
-resource "aws_instance" "simple-nginx" {
+resource "aws_instance" "nginx" {
   ami = "${lookup(var.amis, var.region)}"
   instance_type = "t2.micro"
 
@@ -44,7 +44,7 @@ resource "aws_instance" "simple-nginx" {
 
   associate_public_ip_address = true
 
-  user_data = "${file("./userdata.sh")}"
+  user_data = "${file(var.userdata-path)}"
 
   tags {
     Name = "nginx"

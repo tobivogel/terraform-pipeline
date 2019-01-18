@@ -1,4 +1,4 @@
-output "ip-address" {
+output "public-ip" {
   value = "${aws_instance.nginx.public_ip}"
 }
 
