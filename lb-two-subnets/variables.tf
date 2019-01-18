@@ -2,6 +2,11 @@ variable "region" {
   default = "ap-southeast-1"
 }
 
+variable "availability-zones" {
+  type = "list"
+  default = ["ap-southeast-1a", "ap-southeast-1b", "ap-southeast-1c"]
+}
+
 variable "amis" {
   type = "map"
   default = {
@@ -10,7 +15,7 @@ variable "amis" {
   }
 }
 
-variable "public_key_path" {
+variable "public-key-path" {
   description = <<DESCRIPTION
 Path to the SSH public key to be used for authentication.
 Ensure this keypair is added to your local SSH agent so provisioners can
@@ -20,7 +25,7 @@ DESCRIPTION
   default = "~/.ssh/terraform.key.pub"
 }
 
-variable "key_name" {
+variable "key-name" {
   description = "Desired name of AWS key pair"
   default = "terraform.key"
 }

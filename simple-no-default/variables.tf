@@ -27,5 +27,5 @@ variable "key-name" {
 
 variable "userdata-path" {
   description = "Shell script executed after provisioning the EC2 instance"
-  default = "./../scripts/userdata.sh"
+  default = "./../config-files/userdata.sh"
 }
