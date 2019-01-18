@@ -27,6 +27,12 @@ resource "aws_subnet" "tools-public" {
   map_public_ip_on_launch = true
 }
 
+# Use main route table for subnet (gets done by default)
+//resource "aws_route_table_association" "a" {
+//  subnet_id      = "${aws_subnet.tools-public.id}"
+//  route_table_id = "${aws_vpc.tools.main_route_table_id}"
+//}
+
 # Default security group to access the EC2 instances
 resource "aws_security_group" "default-http" {
   name = "default-http-sg"
