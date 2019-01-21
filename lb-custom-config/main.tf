@@ -25,7 +25,6 @@ resource "aws_subnet" "tools-public" {
   cidr_block = "10.0.0.0/24"
   vpc_id = "${aws_vpc.tools.id}"
   map_public_ip_on_launch = true
-  availability_zone = "${element(var.availability-zones, 1)}"
 }
 
 # Use main route table for subnet (gets done by default)
@@ -142,7 +141,7 @@ CONTENT
   }
 
   provisioner "file" {
-    source = "${var.config-files-path}index.html"
+    source = "${var.static-page-path}"
     destination = "/tmp/index.html"
   }
 }

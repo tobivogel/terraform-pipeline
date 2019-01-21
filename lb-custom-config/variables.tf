@@ -2,11 +2,6 @@ variable "region" {
   default = "ap-southeast-1"
 }
 
-variable "availability-zones" {
-  type = "list"
-  default = ["ap-southeast-1a", "ap-southeast-1b", "ap-southeast-1c"]
-}
-
 variable "amis" {
   type = "map"
   default = {
@@ -30,9 +25,9 @@ variable "key-name" {
   default = "terraform.key"
 }
 
-variable "config-files-path" {
-  description = "Path to config files"
-  default = "./../config-files/"
+variable "static-page-path" {
+  description = "Path to static html page"
+  default = "./../config-files/index.html"
 }
 
 variable "userdata-path" {
