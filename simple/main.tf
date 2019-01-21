@@ -36,7 +36,7 @@ resource "aws_security_group" "http-ssh-default" {
 
 resource "aws_instance" "nginx" {
   ami = "${lookup(var.amis, var.region)}"
-  instance_type = "t2.micro"
+  instance_type = "t2.nano"
 
   security_groups = ["${aws_security_group.http-ssh-default.name}"]
 

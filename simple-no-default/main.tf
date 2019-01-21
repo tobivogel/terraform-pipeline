@@ -72,7 +72,7 @@ resource "aws_key_pair" "auth" {
 
 resource "aws_instance" "nginx" {
   ami = "${lookup(var.amis, var.region)}"
-  instance_type = "t2.micro"
+  instance_type = "t2.nano"
 
   # We're going to launch into the same subnet as our ELB. In a production
   # environment it's more common to have a separate private subnet for

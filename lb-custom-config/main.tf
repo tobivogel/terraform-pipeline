@@ -108,7 +108,7 @@ resource "aws_key_pair" "auth" {
 
 resource "aws_instance" "nginx" {
   ami = "${lookup(var.amis, var.region)}"
-  instance_type = "t2.micro"
+  instance_type = "t2.nano"
 
   # We're going to launch into the same subnet as our ELB. In a production
   # environment it's more common to have a separate private subnet for
@@ -125,4 +125,24 @@ resource "aws_instance" "nginx" {
   # In this case, we just install nginx and start it. By default,
   # this should be on port 80
   user_data = "${file(var.userdata-path)}"
+
+  connection {
+    user = "ec2-user"
+  }
+
+  provisioner "file" {
+    content     = <<CONTENT
+infos:
+- ami used: ${self.ami}
+- id: ${self.id}
+- availability zone: ${self.availability_zone}
+- subnet: ${self.subnet_id}
+CONTENT
+    destination = "/tmp/instance-info.yaml"
+  }
+
+  provisioner "file" {
+    source = "${var.config-files-path}index.html"
+    destination = "/tmp/index.html"
+  }
 }

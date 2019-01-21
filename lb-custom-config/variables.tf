@@ -30,7 +30,12 @@ variable "key-name" {
   default = "terraform.key"
 }
 
+variable "config-files-path" {
+  description = "Path to config files"
+  default = "./../config-files/"
+}
+
 variable "userdata-path" {
   description = "Shell script executed after provisioning the EC2 instance"
-  default = "./../config-files/userdata.sh"
+  default = "./../config-files/userdata-own-page.sh"
 }
