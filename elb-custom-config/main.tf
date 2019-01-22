@@ -74,7 +74,7 @@ resource "aws_security_group" "private-sg" {
     from_port = 80
     to_port = 80
     protocol = "tcp"
-    cidr_blocks = ["10.0.0.0/16"]
+    cidr_blocks = ["10.0.0.0/24"]
   }
 
   egress {
@@ -85,6 +85,7 @@ resource "aws_security_group" "private-sg" {
   }
 }
 
+# ALB not possible as it requires at least two different target subnets
 resource "aws_elb" "web-elb" {
   name = "public-elb"
 
