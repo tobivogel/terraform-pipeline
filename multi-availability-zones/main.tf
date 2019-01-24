@@ -153,20 +153,12 @@ resource "aws_instance" "nginx" {
   count = "${length(var.availability-zones)}"
   availability_zone = "${element(var.availability-zones, count.index)}"
 
-  # We're going to launch into the same subnet as our ELB. In a production
-  # environment it's more common to have a separate private subnet for
-  # backend instances.
   subnet_id = "${element(aws_subnet.tools-public.*.id, count.index)}"
 
-  # Our Security group to allow HTTP and SSH access
   vpc_security_group_ids = ["${aws_security_group.private-sg.id}"]
 
-  # Name of the keypair used
   key_name = "${aws_key_pair.auth.id}"
 
-  # We run a remote provisioner on the instance after creating it.
-  # In this case, we just install nginx and start it. By default,
-  # this should be on port 80
   user_data = "${file(var.userdata-path)}"
 
   connection {
