@@ -75,6 +75,14 @@ resource "aws_security_group" "private-sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  # assumption that the go agent needs this to download binaries
+  ingress {
+    from_port = 80
+    to_port = 80
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   ingress {
     from_port = 8153
     to_port = 8153

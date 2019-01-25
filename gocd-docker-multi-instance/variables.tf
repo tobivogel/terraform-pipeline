@@ -2,11 +2,6 @@ variable "region" {
   default = "ap-southeast-1"
 }
 
-variable "availability-zones" {
-  type = "list"
-  default = ["ap-southeast-1a", "ap-southeast-1b", "ap-southeast-1c"]
-}
-
 variable "amis" {
   type = "map"
   default = {
@@ -30,17 +25,12 @@ variable "key-name" {
   default = "terraform.key"
 }
 
-variable "cert-domain-name" {
-  description = "name of the domain for which an AWS certificate will be created"
-  default = ""
-}
-
 variable "server-userdata-path" {
   description = "Shell script executed after provisioning the EC2 instance"
   default = "./config-files/userdata.sh"
 }
 
-variable "docker-config-path" {
-  description = "Path to docker files folder"
-  default = "./../docker/"
+variable "server-config-folder-path" {
+  description = "Path to gocd server config"
+  default = "./docker/server-config/"
 }
