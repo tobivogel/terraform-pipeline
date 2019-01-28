@@ -62,39 +62,6 @@ resource "aws_security_group" "server-sg" {
     cidr_blocks = ["10.0.0.0/16"]
   }
 
-  # Docker overlay network requirements
-  # TCP port 2377 for cluster management communications
-  # TCP and UDP port 7946 for communication among nodes
-  # UDP port 4789 for overlay network traffic
-
-  ingress {
-    from_port = 2377
-    to_port = 2377
-    protocol = "tcp"
-    cidr_blocks = ["10.0.0.0/16"]
-  }
-
-  ingress {
-    from_port = 7946
-    to_port = 7946
-    protocol = "tcp"
-    cidr_blocks = ["10.0.0.0/16"]
-  }
-
-  ingress {
-    from_port = 7946
-    to_port = 7946
-    protocol = "udp"
-    cidr_blocks = ["10.0.0.0/16"]
-  }
-
-  ingress {
-    from_port = 4789
-    to_port = 4789
-    protocol = "udp"
-    cidr_blocks = ["10.0.0.0/16"]
-  }
-
   egress {
     from_port = 0
     to_port = 0
@@ -125,39 +92,6 @@ resource "aws_security_group" "agent-sg" {
     from_port = 8154
     to_port = 8154
     protocol = "tcp"
-    cidr_blocks = ["10.0.0.0/16"]
-  }
-
-  # Docker overlay network requirements
-  # TCP port 2377 for cluster management communications
-  # TCP and UDP port 7946 for communication among nodes
-  # UDP port 4789 for overlay network traffic
-
-  ingress {
-    from_port = 2377
-    to_port = 2377
-    protocol = "tcp"
-    cidr_blocks = ["10.0.0.0/16"]
-  }
-
-  ingress {
-    from_port = 7946
-    to_port = 7946
-    protocol = "tcp"
-    cidr_blocks = ["10.0.0.0/16"]
-  }
-
-  ingress {
-    from_port = 7946
-    to_port = 7946
-    protocol = "udp"
-    cidr_blocks = ["10.0.0.0/16"]
-  }
-
-  ingress {
-    from_port = 4789
-    to_port = 4789
-    protocol = "udp"
     cidr_blocks = ["10.0.0.0/16"]
   }
 
