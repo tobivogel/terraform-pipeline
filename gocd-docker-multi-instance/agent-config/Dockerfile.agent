@@ -1,0 +1,9 @@
+FROM gocd/gocd-agent-alpine-3.8:v18.12.0
+
+ENV AGENT_AUTO_REGISTER_KEY "cafecafe-4aab-4056-b325-9fbe25b9a734"
+ENV GO_SERVER_URL https://10.0.0.227:8154/go
+
+RUN \
+# add the development addition to build java applications
+  apk --no-cache upgrade && \
+  apk add --no-cache openjdk8

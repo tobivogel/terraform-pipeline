@@ -27,6 +27,7 @@ resource "aws_subnet" "tools-public-ip" {
   map_public_ip_on_launch = true
 }
 
+
 resource "aws_security_group" "server-sg" {
   vpc_id = "${aws_vpc.tools.id}"
 
@@ -45,6 +46,7 @@ resource "aws_security_group" "server-sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  # GoCD needs this for HTTP connections
   ingress {
     from_port = 8153
     to_port = 8153
@@ -52,10 +54,44 @@ resource "aws_security_group" "server-sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  # GoCD needs this for HTTPS connections
   ingress {
     from_port = 8154
     to_port = 8154
     protocol = "tcp"
+    cidr_blocks = ["10.0.0.0/16"]
+  }
+
+  # Docker overlay network requirements
+  # TCP port 2377 for cluster management communications
+  # TCP and UDP port 7946 for communication among nodes
+  # UDP port 4789 for overlay network traffic
+
+  ingress {
+    from_port = 2377
+    to_port = 2377
+    protocol = "tcp"
+    cidr_blocks = ["10.0.0.0/16"]
+  }
+
+  ingress {
+    from_port = 7946
+    to_port = 7946
+    protocol = "tcp"
+    cidr_blocks = ["10.0.0.0/16"]
+  }
+
+  ingress {
+    from_port = 7946
+    to_port = 7946
+    protocol = "udp"
+    cidr_blocks = ["10.0.0.0/16"]
+  }
+
+  ingress {
+    from_port = 4789
+    to_port = 4789
+    protocol = "udp"
     cidr_blocks = ["10.0.0.0/16"]
   }
 
@@ -92,6 +128,39 @@ resource "aws_security_group" "agent-sg" {
     cidr_blocks = ["10.0.0.0/16"]
   }
 
+  # Docker overlay network requirements
+  # TCP port 2377 for cluster management communications
+  # TCP and UDP port 7946 for communication among nodes
+  # UDP port 4789 for overlay network traffic
+
+  ingress {
+    from_port = 2377
+    to_port = 2377
+    protocol = "tcp"
+    cidr_blocks = ["10.0.0.0/16"]
+  }
+
+  ingress {
+    from_port = 7946
+    to_port = 7946
+    protocol = "tcp"
+    cidr_blocks = ["10.0.0.0/16"]
+  }
+
+  ingress {
+    from_port = 7946
+    to_port = 7946
+    protocol = "udp"
+    cidr_blocks = ["10.0.0.0/16"]
+  }
+
+  ingress {
+    from_port = 4789
+    to_port = 4789
+    protocol = "udp"
+    cidr_blocks = ["10.0.0.0/16"]
+  }
+
   egress {
     from_port = 0
     to_port = 0
@@ -114,27 +183,25 @@ resource "aws_instance" "server" {
 
   key_name = "${aws_key_pair.auth.id}"
 
-  user_data = "${file(var.server-userdata-path)}"
+  user_data = "${file(var.server-user-data-path)}"
 
   connection {
     user = "ec2-user"
   }
 
-  # provide docker files from S3 or a VCS to make it machine independent
   provisioner "file" {
-    source = "${data.template_file.dockerfile-server}"
-    destination = "~/Dockerfile"
+    source = "${var.server-config-path}"
+    destination = "~"
   }
 
-  provisioner "file" {
-    source = "${file("./docker/setup-server.sh")}"
-    destination = "~/setup-server.sh"
+  tags {
+    Name = "server"
   }
+}
 
-  provisioner "file" {
-    source = "${var.server-config-folder-path}"
-    destination = "~/server-config/"
-  }
+resource "local_file" "save-docker-agent-with-ip" {
+  content = "${data.template_file.dockerfile-agent.rendered}"
+  filename = "${"./agent-config/Dockerfile.agent"}"
 }
 
 resource "aws_instance" "agent" {
@@ -146,20 +213,20 @@ resource "aws_instance" "agent" {
 
   key_name = "${aws_key_pair.auth.id}"
 
-  user_data = "${file(var.server-userdata-path)}"
+  user_data = "${file(var.agent-user-data-path)}"
+
+  depends_on = ["local_file.save-docker-agent-with-ip"]
 
   connection {
     user = "ec2-user"
   }
 
-  # provide docker files from S3 or a VCS to make it machine independent
   provisioner "file" {
-    source = "${data.template_file.dockerfile-agent}"
-    destination = "~/Dockerfile"
+    source = "${var.agent-config-path}"
+    destination = "~"
   }
 
-  provisioner "file" {
-    source = "${file("./docker/setup-agent.sh")}"
-    destination = "~/setup-agent.sh"
+  tags {
+    Name = "agent"
   }
 }
