@@ -133,11 +133,6 @@ resource "aws_instance" "server" {
   }
 }
 
-resource "local_file" "save-docker-agent-with-ip" {
-  content = "${data.template_file.dockerfile-agent.rendered}"
-  filename = "${"./agent-config/Dockerfile.agent"}"
-}
-
 resource "aws_instance" "agent" {
   ami = "${lookup(var.amis, var.region)}"
   instance_type = "t2.micro"
@@ -149,8 +144,6 @@ resource "aws_instance" "agent" {
 
   user_data = "${file(var.agent-user-data-path)}"
 
-  depends_on = ["local_file.save-docker-agent-with-ip"]
-
   connection {
     user = "ec2-user"
   }
@@ -158,6 +151,11 @@ resource "aws_instance" "agent" {
   provisioner "file" {
     source = "${var.agent-config-path}"
     destination = "~"
+  }
+
+  provisioner "file" {
+    content = "${data.template_file.dockerfile-agent.rendered}"
+    destination = "~/Dockerfile.agent"
   }
 
   tags {
