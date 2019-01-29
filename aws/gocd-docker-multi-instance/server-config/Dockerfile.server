@@ -1,0 +1,10 @@
+FROM gocd/gocd-server:v18.12.0
+
+EXPOSE 8153/tcp
+EXPOSE 8154/tcp
+
+COPY ./gocd-config/cruise-config.xml /godata/config/cruise-config.xml
+
+RUN chown -R go:go /godata
+
+VOLUME /gocd-artifacts

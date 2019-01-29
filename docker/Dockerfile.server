@@ -1,5 +1,0 @@
-FROM gocd/gocd-server:v18.12.0
-
-COPY ./server-config/cruise-config.xml /godata/config/cruise-config.xml
-
-RUN chown -R go:go /godata

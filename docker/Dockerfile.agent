@@ -1,6 +1,0 @@
-FROM gocd/gocd-agent-alpine-3.8:v18.12.0
-
-RUN \
-# add the development addition to build java applications
-  apk --no-cache upgrade && \
-  apk add --no-cache openjdk8
