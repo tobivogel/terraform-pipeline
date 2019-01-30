@@ -38,7 +38,14 @@ resource "aws_security_group" "server-sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  # assumption that the server needs this to download binaries
+  egress {
+    from_port = 22
+    to_port = 22
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # needed to download dependencies (would not be needed if they would already be baked into an image)
   ingress {
     from_port = 80
     to_port = 80
@@ -46,8 +53,36 @@ resource "aws_security_group" "server-sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  egress {
+    from_port = 80
+    to_port = 80
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port = 443
+    to_port = 443
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port = 443
+    to_port = 443
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   # GoCD needs this for HTTP connections
   ingress {
+    from_port = 8153
+    to_port = 8153
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
     from_port = 8153
     to_port = 8153
     protocol = "tcp"
@@ -63,10 +98,10 @@ resource "aws_security_group" "server-sg" {
   }
 
   egress {
-    from_port = 0
-    to_port = 0
-    protocol = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port = 8154
+    to_port = 8154
+    protocol = "tcp"
+    cidr_blocks = ["10.0.0.0/16"]
   }
 }
 
@@ -80,7 +115,14 @@ resource "aws_security_group" "agent-sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  # assumption that the server needs this to download binaries
+  egress {
+    from_port = 22
+    to_port = 22
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # needed to download dependencies (would not be needed if they would already be baked into an image)
   ingress {
     from_port = 80
     to_port = 80
@@ -88,6 +130,28 @@ resource "aws_security_group" "agent-sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  egress {
+    from_port = 80
+    to_port = 80
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port = 443
+    to_port = 443
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port = 443
+    to_port = 443
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # GoCD agents connect to the server over HTTPS on 8154
   ingress {
     from_port = 8154
     to_port = 8154
@@ -96,10 +160,10 @@ resource "aws_security_group" "agent-sg" {
   }
 
   egress {
-    from_port = 0
-    to_port = 0
-    protocol = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port = 8154
+    to_port = 8154
+    protocol = "tcp"
+    cidr_blocks = ["10.0.0.0/16"]
   }
 }
 
