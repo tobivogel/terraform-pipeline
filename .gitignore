@@ -4,3 +4,5 @@ docker/gocd-artifacts/*
 
 *.tfstate
 *.tfstate.*
+
+.idea/
