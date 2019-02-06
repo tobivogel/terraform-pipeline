@@ -37,5 +37,5 @@ variable "server-userdata-path" {
 
 variable "docker-config-path" {
   description = "Path to docker files folder"
-  default = "./../docker/"
+  default = "./docker/"
 }

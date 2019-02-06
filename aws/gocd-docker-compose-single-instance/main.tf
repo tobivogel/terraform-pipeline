@@ -52,7 +52,6 @@ resource "aws_security_group" "public-lb-sg" {
   }
 
   # outbound internet access
-  # TODO: restrict to ports actually needed
   egress {
     from_port = 0
     to_port = 0
