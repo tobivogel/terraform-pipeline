@@ -170,21 +170,18 @@ resource "aws_security_group" "agent-sg" {
 # Create an IAM role for the GoCD Server in order to read keys from KMS.
 resource "aws_iam_role" "server_iam_role" {
   name = "server_iam_role"
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "ec2.amazonaws.com"
-      },
-      "Effect": "Allow",
-      "Sid": ""
-    }
-  ]
+  assume_role_policy = "${data.aws_iam_policy_document.server_instance.json}"
 }
-EOF
+
+data "aws_iam_policy_document" "server_instance" {
+  statement {
+    effect = "Allow"
+    actions = ["sts:AssumeRole"]
+    principals {
+      type = "Service"
+      identifiers = ["ec2.amazonaws.com"]
+    }
+  }
 }
 
 resource "aws_iam_instance_profile" "server_instance_profile" {
@@ -195,25 +192,21 @@ resource "aws_iam_instance_profile" "server_instance_profile" {
 resource "aws_iam_role_policy" "server_iam_role_policy" {
   name = "server_use_kms_iam_role_policy"
   role = "${aws_iam_role.server_iam_role.id}"
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "AllowUseOfKMS",
-      "Effect": "Allow",
-      "Action": [
-        "kms:Encrypt",
-        "kms:Decrypt",
-        "kms:ReEncrypt*",
-        "kms:GenerateDataKey*",
-        "kms:DescribeKey"
-      ],
-      "Resource": "*"
-    }
-  ]
+  policy = "${data.aws_iam_policy_document.server_permissions.json}"
 }
-EOF
+
+data "aws_iam_policy_document" "server_permissions" {
+  statement {
+    effect = "Allow"
+    resources = ["*"]
+    actions = [
+      "kms:Encrypt",
+      "kms:Decrypt",
+      "kms:ReEncrypt*",
+      "kms:GenerateDataKey*",
+      "kms:DescribeKey"
+    ]
+  }
 }
 
 resource "aws_key_pair" "auth" {
